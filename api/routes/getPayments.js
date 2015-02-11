@@ -14,10 +14,25 @@ var getPayments = function (req, res, next) {
     if (err) {
       errorResponse(err);   
     } else {
-      console.log(resp.transactions[0]);
+      var payments = parsePayments(resp.transactions);
+      successResponse(payments);
     }
   });
   
+  function parsePayments(transactions){
+    var payments = [];
+    for (var i=0; i<transactions.length; i++){
+      var transaction = transactions[i];
+      console.log(transaction.tx.TransactionType);
+      if (transaction.tx.TransactionType === "Payment"){
+        transaction.metaData = transaction.meta;
+        delete transaction.meta;
+        payments.push(transaction);
+      }
+    }
+    return payments;
+  }
+
  /**
   * prepareOptions
   * parse request parameters to determine query options 
@@ -68,15 +83,7 @@ var getPayments = function (req, res, next) {
   * @param {Object} transactions
   */  
   function successResponse (data) {
-    var result = {
-      result       : 'success',
-      count        : data.transactions.length,
-      total        : data.total,
-      transactions : data.transactions
-    };
-    
-    log.info('ACCOUNT TX: Transactions Found:', data.transactions.length);  
-    response.json(result).pipe(res);      
+    response.json(data).pipe(res);      
   };
 }
 
