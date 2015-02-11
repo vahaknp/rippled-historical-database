@@ -24,11 +24,10 @@ var getPayments = function (req, res, next) {
     for (var i=0; i<transactions.length; i++){
       var transaction = transactions[i];
       console.log(transaction.tx.TransactionType);
-      if (transaction.tx.TransactionType === "Payment"){
-        transaction.metaData = transaction.meta;
-        delete transaction.meta;
-        payments.push(transaction);
-      }
+      transaction.metaData = transaction.meta;
+      delete transaction.meta;
+      payments.push(transaction);
+
     }
     return payments;
   }
