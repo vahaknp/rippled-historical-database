@@ -23,13 +23,14 @@ var getPayments = function (req, res, next) {
     var payments = [];
     for (var i=0; i<transactions.length; i++){
       var transaction = transactions[i];
-      console.log(transaction.tx.TransactionType);
       transaction.metaData = transaction.meta;
       delete transaction.meta;
-      payments.push(transaction);
+      transaction = payment(transaction);
+      if (transaction !== null)
+        payments.push(transaction);
 
     }
-    return payments;
+    return transactions[0];
   }
 
  /**
